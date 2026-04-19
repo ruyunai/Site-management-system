@@ -11,10 +11,8 @@ function generateUploadToken(accessKey: string, secretKey: string, bucket: strin
 
   const policyString = JSON.stringify(putPolicy);
 
-  const encodedPolicy = crypto
-    .createHash('base64')
-    .update(policyString)
-    .digest('base64')
+  const encodedPolicy = Buffer.from(policyString)
+    .toString('base64')
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/, '');
