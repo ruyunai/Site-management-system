@@ -1,0 +1,123 @@
+===============================================
+工地管理系统 - 环境变量配置清单
+===============================================
+版本：2026-04-19
+===============================================
+
+【重要说明】
+复制以下内容到目标环境时：
+1. 登录 Vercel Dashboard → 项目 Settings → Environment Variables
+2. 逐项添加以下变量（注意变量名称要完全一致）
+3. 添加完成后需要 Redeploy 才会生效
+
+===============================================
+Supabase 配置
+===============================================
+
+变量名：NEXT_PUBLIC_SUPABASE_URL
+值：https://peecoclrmfnlqizpjdee.supabase.co
+
+变量名：NEXT_PUBLIC_SUPABASE_ANON_KEY
+值：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlZWNvY2xybWZubHFpenBqZGVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1MDM2OTYsImV4cCI6MjA5MjA3OTY5Nn0.aMnubTWlqnScHoFJXIQMU7qtH13aBA47dQQ-5voTbiM
+
+变量名：SUPABASE_SERVICE_ROLE_KEY
+值：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlZWNvY2xybWZubHFpenBqZGVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjUwMzY5NiwiZXhwIjoyMDkyMDc5Njk2fQ._JkYCVg2ViVGEkLOIvTiBxX9fU70kQZ6ZYnbX1NkaLo
+
+===============================================
+七牛云配置
+===============================================
+
+变量名：QINIU_ACCESS_KEY
+值：W7gnhGbvkWSPW90Vfz8KDpd4QzZzFhMUIl-gxwGv
+
+变量名：QINIU_SECRET_KEY
+值：EeazCLBveIPp2cAiuXKqV3yYZNAr4XuHjC7ABu60
+
+变量名：QINIU_BUCKET_NAME
+值：yihaowang234
+
+变量名：QINIU_DOMAIN
+值（当前配置，HTTP）：http://www.yihaowang.top
+值（HTTPS配置后使用）：https://www.yihaowang.top
+
+===============================================
+【Supabase 数据库结构】
+===============================================
+
+数据库 Schema 文件位置：supabase/schema.sql
+
+包含以下表：
+1. users - 用户表（用户名密码登录）
+2. wage_settings - 工资单价设置表
+3. workers - 工人表
+4. work_records - 工作记录表
+5. loan_records - 借资记录表
+6. salary_settlements - 工资结算记录表
+7. material_records - 物料记录表
+
+详细字段请参考：supabase/schema.sql
+
+===============================================
+【Supabase Storage 存储桶配置】
+===============================================
+
+存储桶名称：materials-photos
+访问权限：公开（Public）
+用途：存放物料照片
+
+===============================================
+【七牛云配置说明】
+===============================================
+
+区域：亚太-新加坡（原东南亚）
+上传地址：https://up-as0.qiniup.com
+下载地址：https://www.yihaowang.top（需要配置自定义域名和HTTPS）
+
+===============================================
+【部署步骤】
+===============================================
+
+1. GitHub 准备：
+   - 确保代码已推送到 GitHub：https://github.com/yihaowang123/glxt
+
+2. Vercel 部署：
+   - 登录 https://vercel.com
+   - 点击 "New Project"
+   - 导入 GitHub 仓库
+   - 在 Environment Variables 中添加上述所有变量
+   - 点击 Deploy
+
+3. Supabase 准备：
+   - 登录 https://supabase.com/dashboard/project/peecoclrmfnlqizpjdee
+   - 在 SQL Editor 中执行 supabase/schema.sql 中的建表语句
+   - 创建 Storage 存储桶 materials-photos
+
+4. 配置验证：
+   - 部署完成后，访问网站
+   - 测试上传功能
+   - 确认数据正常显示
+
+===============================================
+【换电脑继续开发】
+===============================================
+
+1. 安装必要软件：
+   - Node.js 18+
+   - Git
+   - VS Code 或其他编辑器
+
+2. 克隆代码：
+   git clone https://github.com/yihaowang123/glxt.git
+   cd glxt
+
+3. 安装依赖：
+   npm install
+
+4. 配置环境变量：
+   复制 .env.local.example 为 .env.local（如果存在）
+   或直接创建 .env.local 文件，填入环境变量
+
+5. 启动开发服务器：
+   npm run dev
+
+===============================================

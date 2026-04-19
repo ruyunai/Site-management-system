@@ -1,0 +1,176 @@
+===============================================
+工地管理系统 - 部署说明
+===============================================
+版本：2026-04-19
+===============================================
+
+【项目简介】
+工地管理系统是一个基于 Next.js 14 + Supabase + 七牛云的工地管理 SaaS 平台。
+
+功能模块：
+- 工资结算管理（录入、查询、结算、导出）
+- 物料管理（水泥、砂石料等）
+- 车辆管理（车队管理）
+- 数据导出（Excel 格式）
+
+===============================================
+【技术架构】
+===============================================
+
+前端框架：Next.js 14 (App Router)
+数据库：Supabase (PostgreSQL)
+文件存储：七牛云
+样式框架：Tailwind CSS + Radix UI
+部署平台：Vercel
+
+===============================================
+【快速部署】
+===============================================
+
+第一步：配置 Supabase
+------------------------
+1. 登录 https://supabase.com
+2. 创建新项目或使用现有项目
+3. 在 SQL Editor 中执行建表（参考 环境变量配置清单.txt）
+
+建表 SQL：
+
+-- 工资记录表
+CREATE TABLE IF NOT EXISTS wage_records (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  worker_name TEXT NOT NULL,
+  id_number TEXT,
+  bank_name TEXT,
+  card_number TEXT,
+  wage_amount NUMERIC,
+  settlement_date DATE,
+  photo_url TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 物料记录表
+CREATE TABLE IF NOT EXISTS materials (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  type TEXT NOT NULL,
+  name TEXT NOT NULL,
+  quantity NUMERIC,
+  unit TEXT,
+  amount NUMERIC,
+  date DATE,
+  worker_name TEXT,
+  photo_url TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 车辆记录表
+CREATE TABLE IF NOT EXISTS vehicles (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  plate_number TEXT NOT NULL,
+  driver_name TEXT,
+  driver_phone TEXT,
+  vehicle_type TEXT,
+  load_capacity NUMERIC,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 启用 RLS (行级安全策略)
+ALTER TABLE wage_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE materials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vehicles ENABLE ROW LEVEL SECURITY;
+
+-- 创建公开访问策略
+CREATE POLICY "Allow public access" ON wage_records FOR ALL USING (true);
+CREATE POLICY "Allow public access" ON materials FOR ALL USING (true);
+CREATE POLICY "Allow public access" ON vehicles FOR ALL USING (true);
+
+-- 创建 Storage 存储桶（用于存放照片）
+INSERT INTO storage.buckets (id, name, public) VALUES ('materials-photos', 'materials-photos', true);
+
+CREATE POLICY "Allow public access" ON storage.objects FOR ALL USING (bucket_id = 'materials-photos');
+
+
+第二步：配置七牛云
+------------------------
+1. 登录 https://www.qiniu.com
+2. 创建存储空间（bucket）
+   - 区域：亚太-新加坡
+   - 访问控制：公开
+3. 配置自定义域名（如需 HTTPS 访问）
+   - 域名：www.yihaowang.top
+   - 配置 CNAME 解析
+   - 申请 SSL 证书（HTTPS必需）
+
+
+第三步：部署到 Vercel
+------------------------
+1. 登录 https://vercel.com
+2. 点击 "New Project"
+3. 导入 GitHub 仓库：yihaowang123/glxt
+4. 配置环境变量（在 Environment Variables 中添加）：
+   - NEXT_PUBLIC_SUPABASE_URL
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY
+   - SUPABASE_SERVICE_ROLE_KEY
+   - QINIU_ACCESS_KEY
+   - QINIU_SECRET_KEY
+   - QINIU_BUCKET_NAME
+   - QINIU_DOMAIN
+   （参考 环境变量配置清单.txt）
+5. 点击 Deploy
+
+
+第四步：验证部署
+------------------------
+1. 访问 Vercel 分配的域名（或自定义域名）
+2. 测试各个功能模块
+3. 测试图片上传功能
+
+
+===============================================
+【换电脑继续开发】
+===============================================
+
+1. 安装必要软件：
+   - Node.js 18+
+   - Git
+   - VS Code 或其他编辑器
+
+2. 克隆代码：
+   git clone https://github.com/yihaowang123/glxt.git
+   cd glxt
+
+3. 安装依赖：
+   npm install
+
+4. 配置环境变量：
+   复制 .env.local.example 为 .env.local
+   填入环境变量（参考 环境变量配置清单.txt）
+
+5. 启动开发服务器：
+   npm run dev
+
+
+===============================================
+【常见问题】
+===============================================
+
+Q: 图片上传后不显示
+A: 检查 QINIU_DOMAIN 是否使用 HTTPS。浏览器会阻止 HTTPS 页面加载 HTTP 图片。
+
+Q: 本地开发正常，部署后报错
+A: 检查 Vercel 环境变量是否配置正确。
+
+Q: 七牛云 BadToken 错误
+A: 检查 Access Key 和 Secret Key 是否正确，确保和七牛云后台一致。
+
+===============================================
+【联系方式】
+===============================================
+GitHub: https://github.com/yihaowang123/glxt
+Supabase: https://supabase.com/dashboard/project/peecoclrmfnlqizpjdee
+
+===============================================
