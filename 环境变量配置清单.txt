@@ -5,40 +5,45 @@
 ===============================================
 
 【重要说明】
-复制以下内容到目标环境时：
-1. 登录 Vercel Dashboard → 项目 Settings → Environment Variables
-2. 逐项添加以下变量（注意变量名称要完全一致）
-3. 添加完成后需要 Redeploy 才会生效
+此文件仅包含环境变量模板，不包含真实值。
+复制 .env.example 文件到 .env.local 并填入你的真实值。
 
 ===============================================
 Supabase 配置
 ===============================================
 
 变量名：NEXT_PUBLIC_SUPABASE_URL
-值：https://peecoclrmfnlqizpjdee.supabase.co
+说明：Supabase 项目 URL
+获取地址：https://supabase.com/dashboard
 
 变量名：NEXT_PUBLIC_SUPABASE_ANON_KEY
-值：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlZWNvY2xybWZubHFpenBqZGVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1MDM2OTYsImV4cCI6MjA5MjA3OTY5Nn0.aMnubTWlqnScHoFJXIQMU7qtH13aBA47dQQ-5voTbiM
+说明：Supabase 匿名密钥（公开）
+获取地址：Supabase 项目 Settings → API
 
 变量名：SUPABASE_SERVICE_ROLE_KEY
-值：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlZWNvY2xybWZubHFpenBqZGVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjUwMzY5NiwiZXhwIjoyMDkyMDc5Njk2fQ._JkYCVg2ViVGEkLOIvTiBxX9fU70kQZ6ZYnbX1NkaLo
+说明：Supabase 服务角色密钥（私密，不要泄露）
+获取地址：Supabase 项目 Settings → API
 
 ===============================================
-七牛云配置
+七牛云配置（可选）
 ===============================================
 
 变量名：QINIU_ACCESS_KEY
-值：W7gnhGbvkWSPW90Vfz8KDpd4QzZzFhMUIl-gxwGv
+说明：七牛云 Access Key
+获取地址：https://www.qiniu.com → 个人中心 → 秘钥管理
 
 变量名：QINIU_SECRET_KEY
-值：EeazCLBveIPp2cAiuXKqV3yYZNAr4XuHjC7ABu60
+说明：七牛云 Secret Key（私密，不要泄露）
+获取地址：同上
 
 变量名：QINIU_BUCKET_NAME
-值：yihaowang234
+说明：七牛云存储空间名称
+获取地址：七牛云控制台 → 对象存储
 
 变量名：QINIU_DOMAIN
-值（当前配置，HTTP）：http://www.yihaowang.top
-值（HTTPS配置后使用）：https://www.yihaowang.top
+说明：七牛云下载域名
+- 如使用测试域名：tdpty6gvi.sabkt.gdipper.com（注意：测试域名有效期1个月）
+- 如已配置自定义域名：填写你的自定义域名
 
 ===============================================
 【Supabase 数据库结构】
@@ -58,66 +63,37 @@ Supabase 配置
 详细字段请参考：supabase/schema.sql
 
 ===============================================
-【Supabase Storage 存储桶配置】
-===============================================
-
-存储桶名称：materials-photos
-访问权限：公开（Public）
-用途：存放物料照片
-
-===============================================
-【七牛云配置说明】
-===============================================
-
-区域：亚太-新加坡（原东南亚）
-上传地址：https://up-as0.qiniup.com
-下载地址：https://www.yihaowang.top（需要配置自定义域名和HTTPS）
-
-===============================================
 【部署步骤】
 ===============================================
 
-1. GitHub 准备：
-   - 确保代码已推送到 GitHub：https://github.com/yihaowang123/glxt
+1. 克隆项目：
+   git clone https://github.com/ruyunai/Site-management-system.git
+   cd Site-management-system
 
-2. Vercel 部署：
-   - 登录 https://vercel.com
-   - 点击 "New Project"
-   - 导入 GitHub 仓库
-   - 在 Environment Variables 中添加上述所有变量
-   - 点击 Deploy
-
-3. Supabase 准备：
-   - 登录 https://supabase.com/dashboard/project/peecoclrmfnlqizpjdee
-   - 在 SQL Editor 中执行 supabase/schema.sql 中的建表语句
-   - 创建 Storage 存储桶 materials-photos
-
-4. 配置验证：
-   - 部署完成后，访问网站
-   - 测试上传功能
-   - 确认数据正常显示
-
-===============================================
-【换电脑继续开发】
-===============================================
-
-1. 安装必要软件：
-   - Node.js 18+
-   - Git
-   - VS Code 或其他编辑器
-
-2. 克隆代码：
-   git clone https://github.com/yihaowang123/glxt.git
-   cd glxt
+2. 配置环境变量：
+   复制 .env.example 为 .env.local
+   填入你的 Supabase 和七牛云凭证
 
 3. 安装依赖：
    npm install
 
-4. 配置环境变量：
-   复制 .env.local.example 为 .env.local（如果存在）
-   或直接创建 .env.local 文件，填入环境变量
+4. 部署 Supabase 数据库：
+   登录 https://supabase.com
+   在 SQL Editor 中执行 supabase/schema.sql
 
-5. 启动开发服务器：
-   npm run dev
+5. 部署到 Vercel：
+   登录 https://vercel.com
+   Import GitHub 仓库
+   配置环境变量（参考 .env.example）
+   点击 Deploy
+
+===============================================
+【项目特点】
+===============================================
+
+- 纯前端静态导出，无需服务端
+- 支持 Vercel、Netlify、Cloudflare Pages 等平台
+- Supabase 用于数据存储
+- 七牛云用于文件存储（可选）
 
 ===============================================
