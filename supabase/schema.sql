@@ -93,6 +93,7 @@ CREATE TABLE material_records (
   unit_price_2 DECIMAL(10, 2),
   vehicle_number TEXT,
   ticket_number TEXT,
+  delivery_location TEXT,
   -- 外调砖和内调砖专用字段
   color TEXT,
   driver TEXT,
